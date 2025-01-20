@@ -1,47 +1,86 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Victory from "../../assets/victory.svg";
-import background from "@/assets/login2.png"
+import background from "@/assets/login2.png";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
-import { SIGNUP_ROUTE } from "@/utils/constant";
+import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utils/constant";
+import { useNavigate } from "react-router-dom";
+import { useAppStore } from "@/store";
 
 const Auth = () => {
+  const navigate = useNavigate();
+  const {setUserInfo} = useAppStore();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-
-    const validateSignUp = () =>{
-      if(!email.length){
-        toast.error("Email is required");
-        return false;
-      }
-      if(!password.length){
-        toast.error("Password is required");
-        return false;
-      }
-      if(password !== confirmPassword){
-        toast.error("Password and confirm password must be same");
-        return false;
-      }
-
-      return true;
+  const validateSignUp = () => {
+    if (!email.length) {
+      toast.error("Email is required");
+      return false;
     }
-    const handleLogin = async()=>{
-
+    if (!password.length) {
+      toast.error("Password is required");
+      return false;
+    }
+    if (password !== confirmPassword) {
+      toast.error("Password and confirm password must be same");
+      return false;
     }
 
-    const handleSignup = async()=>{
-      if(validateSignUp()){
-        const response = await apiClient.post(SIGNUP_ROUTE, {email, password});
-         toast.success("signup successful")
+    return true;
+  };
+
+  const validateLogin = () => {
+    if (!email.length) {
+      toast.error("Email is required");
+      return false;
+    }
+    if (!password.length) {
+      toast.error("Password is required");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleLogin = async () => {
+    if (validateLogin()) {
+      const response = await apiClient.post(LOGIN_ROUTE, { email, password },{withCredentials:true});
+      setUserInfo(response.data.user)
+
+    
+    console.log(response)
+    if(response.data.user.id){
+      if(response.data.user.profileSetup){
+        navigate("/chat")
+      }else{
+        navigate("/profile")
       }
+     
+    }
+  }
+  };
+
+  const handleSignup = async () => {
+    if (validateSignUp()) {
+      const response = await apiClient.post(
+        SIGNUP_ROUTE,
+        { email, password },
+        { withCredentials: true }
+      );
+      toast.success("signup successful");
+      setUserInfo(response.data.user)
       
-
+   
+    if(response.status === 201){
+      navigate("/profile")
     }
+  }
+  };
   return (
     <div className="h-[100vh]  flex items-center justify-center">
       <div className="h-[80vh]  bg-white w-[80vw] border-2 border-white text-opacity-90 shadow-2xl md:w-[90vw] lg:w-[70vw] xl:w-[60vw] rounded-3xl grid xl:grid-cols-2">
@@ -58,7 +97,7 @@ const Auth = () => {
         </div>
 
         <div className="flex items-center justify-center w-full">
-          <Tabs className="w-3/4">
+          <Tabs className="w-3/4" defaultValue="login">
             <TabsList className="bg-transparent rounded-none w-full">
               <TabsTrigger
                 className="data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-purple-500 p-3 transition-all duration-300"
@@ -66,46 +105,65 @@ const Auth = () => {
               >
                 Login
               </TabsTrigger>
-              <TabsTrigger className="data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-purple-500 p-3 transition-all duration-300" value="signup">Sign Up</TabsTrigger>
+              <TabsTrigger
+                className="data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-purple-500 p-3 transition-all duration-300"
+                value="signup"
+              >
+                Sign Up
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent className="flex flex-col gap-5 mt-10" value="login">
-                <Input type="email" placeholder="Email" className="rounded-full p-6" value={email} onChange={(e)=>setEmail(e.target.value)} />
-                <Input type="password" 
-                placeholder="passsword" className="rounded-full"
+              <Input
+                type="email"
+                placeholder="Email"
+                className="rounded-full p-6"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Input
+                type="password"
+                placeholder="passsword"
+                className="rounded-full"
                 value={password}
-                onChange={(e)=>setPassword(e.target.value)}
-                
-                />
-                <Button onClick={handleLogin} className="rounded-full">Log in</Button>
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Button onClick={handleLogin} className="rounded-full">
+                Log in
+              </Button>
             </TabsContent>
-            <TabsContent className="flex flex-col gap-5"  value="signup">
-            <Input type="email" placeholder="Email" className="rounded-full" value={email} onChange={(e)=>setEmail(e.target.value)} />
-                <Input type="password" 
-                placeholder="Password" className="rounded-full "
+            <TabsContent className="flex flex-col gap-5" value="signup">
+              <Input
+                type="email"
+                placeholder="Email"
+                className="rounded-full"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Input
+                type="password"
+                placeholder="Password"
+                className="rounded-full "
                 value={password}
-                onChange={(e)=>setPassword(e.target.value)}
-                
-                />
-                   <Input type="password" 
-                placeholder=" Confirm Password" className="rounded-full "
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Input
+                type="password"
+                placeholder=" Confirm Password"
+                className="rounded-full "
                 value={confirmPassword}
-                onChange={(e)=>setConfirmPassword(e.target.value)}
-                
-                />
-                 <Button onClick={handleSignup} className="rounded-full ">Sign Up</Button>
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <Button onClick={handleSignup} className="rounded-full ">
+                Sign Up
+              </Button>
             </TabsContent>
           </Tabs>
-
-          
         </div>
         <div className="hidden xl:flex justify-center items-center">
-            <img src={background} alt="background login" className="h-[700px]"/>
-
-          </div>
+          <img src={background} alt="background login" className="h-[700px]" />
+        </div>
       </div>
-
-     
     </div>
   );
 };
