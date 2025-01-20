@@ -4,6 +4,9 @@ import background from "@/assets/login2.png"
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { apiClient } from "@/lib/api-client";
+import { SIGNUP_ROUTE } from "@/utils/constant";
 
 const Auth = () => {
 
@@ -11,12 +14,32 @@ const Auth = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    const validateSignUp = () =>{
+      if(!email.length){
+        toast.error("Email is required");
+        return false;
+      }
+      if(!password.length){
+        toast.error("Password is required");
+        return false;
+      }
+      if(password !== confirmPassword){
+        toast.error("Password and confirm password must be same");
+        return false;
+      }
 
+      return true;
+    }
     const handleLogin = async()=>{
 
     }
 
     const handleSignup = async()=>{
+      if(validateSignUp()){
+        const response = await apiClient.post(SIGNUP_ROUTE, {email, password});
+         toast.success("signup successful")
+      }
+      
 
     }
   return (
@@ -49,28 +72,28 @@ const Auth = () => {
             <TabsContent className="flex flex-col gap-5 mt-10" value="login">
                 <Input type="email" placeholder="Email" className="rounded-full p-6" value={email} onChange={(e)=>setEmail(e.target.value)} />
                 <Input type="password" 
-                placeholder="passsword" className="rounded-full p-6"
+                placeholder="passsword" className="rounded-full"
                 value={password}
                 onChange={(e)=>setPassword(e.target.value)}
                 
                 />
-                <Button onClick={handleLogin} className="rounded-full p-6">Log in</Button>
+                <Button onClick={handleLogin} className="rounded-full">Log in</Button>
             </TabsContent>
             <TabsContent className="flex flex-col gap-5"  value="signup">
-            <Input type="email" placeholder="Email" className="rounded-full p-6" value={email} onChange={(e)=>setEmail(e.target.value)} />
+            <Input type="email" placeholder="Email" className="rounded-full" value={email} onChange={(e)=>setEmail(e.target.value)} />
                 <Input type="password" 
-                placeholder="Password" className="rounded-full p-6"
+                placeholder="Password" className="rounded-full "
                 value={password}
                 onChange={(e)=>setPassword(e.target.value)}
                 
                 />
                    <Input type="password" 
-                placeholder=" Confirm Password" className="rounded-full p-6"
+                placeholder=" Confirm Password" className="rounded-full "
                 value={confirmPassword}
                 onChange={(e)=>setConfirmPassword(e.target.value)}
                 
                 />
-                 <Button onClick={handleSignup} className="rounded-full p-6">Sign Up</Button>
+                 <Button onClick={handleSignup} className="rounded-full ">Sign Up</Button>
             </TabsContent>
           </Tabs>
 
