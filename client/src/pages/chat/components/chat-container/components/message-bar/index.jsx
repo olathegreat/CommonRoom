@@ -1,3 +1,5 @@
+import { useSocket } from "@/context/SocketContext";
+import { useAppStore } from "@/store";
 import EmojiPicker from "emoji-picker-react";
 import { useEffect, useRef, useState } from "react";
 import { GrAttachment } from "react-icons/gr";
@@ -8,14 +10,35 @@ const MessageBar = () => {
   const [message, setMessage] = useState("");
   const emojiRef = useRef();
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+  const { selectedChatType,userInfo, selectedChatData}= useAppStore();
+  const socket = useSocket()
 
+  
+
+   
   const handleAddEmoji = (emoji) => {
     setMessage((msg) => msg + emoji.emoji);
   };
+  
 
-  const handleSendMessage = async()=>{
+  const handleSendMessage = async () => {
+    if (!message.trim()) {
+        console.log("Cannot send an empty message");
+        return;
+    }
 
-  }
+    socket.emit("send-message", {
+        sender: userInfo.id,
+        content: message.trim(),
+        recipient: selectedChatData._id,
+        messageType: "text",
+        fileUrl: undefined
+    });
+
+    setMessage("");
+};
+
+  
 
   useEffect(()=>{
 

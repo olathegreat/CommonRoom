@@ -1,44 +1,64 @@
-import {createContext, useContext, useEffect, useRef}  from 'react';
-import { useAppStore } from '@/store';
-import { io } from 'socket.io-client';
-import { HOST } from '@/utils/constant';
+import { createContext, useContext, useEffect, useRef } from "react";
+import { useAppStore } from "@/store";
+import { io } from "socket.io-client";
+import { HOST } from "@/utils/constant";
 
 const SocketContext = createContext(null);
 
-export const useSocket = () =>{
-    return useContext(SocketContext);
-}
+export const useSocket = () => {
+  return useContext(SocketContext);
+};
 
-export const SocketProvider = ({children}) =>{
-    const socket = useRef(null);
-    const {userInfo} = useAppStore();
+export const SocketProvider = ({ children }) => {
+  const socket = useRef(null);
+  const { userInfo } = useAppStore();
 
-    useEffect(()=>{
+  useEffect(() => {
+    if (userInfo) {
+      socket.current = io(HOST, {
+        withCredentials: true,
+        query: {
+          userId: userInfo.id,
+        },
+      });
 
-        if(userInfo){
-            socket.current = io(HOST, {
-                withCredentials: true,
-                query: {
-                    userId: userInfo._id
-                }
-            })
+      socket.current.on("connect", () => {
+        console.log("connected to socket server");
+      });
+
+      const handleReceiveMessage = (message) => {
+        
+    
+        const { selectedChatData, selectedChatType, addMessages } =
+          useAppStore.getState();
+
+        if (
+          (selectedChatType !== undefined &&
+            selectedChatData._id === message.sender._id) ||
+          selectedChatData._id === message.recipient._id
+        ) {
+          console.log("message received", message);
+
+          addMessages(message);
         }
+      };
 
-        socket.current.on("connect", ()=>{
-            console.log("connected to socket server")
-        })
+      socket.current.on("receive-message", handleReceiveMessage);
+      socket.current.on("sent-message", handleReceiveMessage);
 
-        return ()=>{
-            socket.current.disconnect();
-        }
+      
 
-    },[userInfo])
+      return () => {
+        socket.current.disconnect();
+      };
+    }
+  }, [userInfo]);
+
+  return (
+    <SocketContext.Provider value={socket.current}>
+      {children}
+    </SocketContext.Provider>
 
 
-    return(
-        <SocketContext.Provider value={socket.current}>
-            {children}
-            </SocketContext.Provider>
-    )
-
-}
+  );
+};
