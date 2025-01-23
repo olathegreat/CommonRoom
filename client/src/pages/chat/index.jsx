@@ -50,8 +50,7 @@ const Chat = () => {
       ) : (
         <ChatContainer />
       )}
-      {/* <EmptyChatContainer/> */}
-      {/* <ChatContainer/> */}
+      
     </div>
   );
 };

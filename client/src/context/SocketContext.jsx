@@ -43,8 +43,17 @@ export const SocketProvider = ({ children }) => {
         }
       };
 
+      const handleReceiveChannelMessage = (message) =>{
+        const {selectedChatData, selectedChatType, addMessages} = useAppStore.getState()
+
+        if(selectedChatType !==undefined && selectedChatData._id=== message.channelId){
+            addMessages(message)
+        }
+      }
+
       socket.current.on("receive-message", handleReceiveMessage);
       socket.current.on("sent-message", handleReceiveMessage);
+      socket.current.on("receive-channel-message",handleReceiveChannelMessage)
 
       
 
