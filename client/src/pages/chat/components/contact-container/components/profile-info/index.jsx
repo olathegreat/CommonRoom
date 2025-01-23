@@ -50,7 +50,7 @@ const ProfileInfo = () => {
               />
             ) : (
               <div
-                className={`uppercase h-32 w-32 md:w-48 md:h-48 text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
+                className={`uppercase h-12 w-12 md:w-48 text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
                   userInfo.color
                 )}`}
               >
@@ -62,13 +62,13 @@ const ProfileInfo = () => {
           </Avatar>
         </div>
 
-        <div>
+        <div className="text-xs text-nowrap">
           {userInfo.firstname && userInfo.lastname
             ? `${userInfo.firstname + " " + userInfo.lastname}`
-            : ""}
+            : userInfo.email}
         </div>
       </div>
-      <div className="flex gap-5">
+      <div className="flex gap-3">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
