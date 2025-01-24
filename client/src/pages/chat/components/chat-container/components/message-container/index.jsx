@@ -5,9 +5,8 @@ import moment from "moment";
 import { MdFolderZip } from "react-icons/md";
 import { IoMdArrowRoundDown, IoMdClose } from "react-icons/io";
 import React, { useEffect, useRef, useState } from "react";
-import {Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getColor } from "@/lib/utils";
-
 
 const MessageContainer = () => {
   const {
@@ -167,7 +166,11 @@ const MessageContainer = () => {
     };
 
     const renderChannelMessage = (message) => {
+        {console.log("rederedChannel meessage",message)}
       return (
+        
+
+        
         <div
           className={`mt-5 ${
             message.sender._id !== userInfo.id ? "text-left" : "text-right"
@@ -195,11 +198,11 @@ const MessageContainer = () => {
                   />
                 )}
                 <AvatarFallback
-                  className={`uppercase h-8 w-8 md:w-48 md:h-48 text-lg  flex items-center justify-center rounded-full ${getColor(
+                  className={`uppercase h-8 w-8  text-lg  flex items-center justify-center rounded-full ${getColor(
                     message.sender.color
                   )}`}
                 >
-                    {message.sender}
+                  
                   {message.sender.firstname
                     ? message.sender.firstname?.split("").shift()
                     : message.sender.email?.split("").shift()}
@@ -214,11 +217,11 @@ const MessageContainer = () => {
               </span>
             </div>
           ) : (
-            <div>
-                 {moment(message.timestamp).format("LT")}
-            </div>
+            <div>{moment(message.timestamp).format("LT")}</div>
           )}
         </div>
+
+
       );
     };
 
@@ -235,7 +238,7 @@ const MessageContainer = () => {
               {moment(message.timeStamp).format("LL")}
             </div>
           )}
-          {selectedChatType === "contact" && renderDMMesage(message)};
+          {selectedChatType === "contact" && renderDMMesage(message)}
           {selectedChatType === "channel" && renderChannelMessage(message)}
         </div>
       );

@@ -43,6 +43,24 @@ export const createChatSlice = (set, get) => ({
 
     console.log(get().selectedChatMessages);
   },
+  addChannelMessages: (message) => {
+    const selectedChatMessages = get().selectedChatMessages;
+    
+
+    set({
+      selectedChatMessages: [
+        ...selectedChatMessages,
+        {
+          ...message,
+          message
+        //   sender: message.sender._id || message.sender,
+        //   recipient: message?.recipient?._id || message?.recipient ,
+        },
+      ],
+    });
+
+    console.log("this is the channel message ",get().selectedChatMessages);
+  },
   addChannel: (channel) => {
     const channels = get().channels;
     set({

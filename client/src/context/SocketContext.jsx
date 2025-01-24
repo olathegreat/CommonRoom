@@ -44,10 +44,11 @@ export const SocketProvider = ({ children }) => {
       };
 
       const handleReceiveChannelMessage = (message) =>{
-        const {selectedChatData, selectedChatType, addMessages} = useAppStore.getState()
+        const {selectedChatData, selectedChatType, addChannelMessages} = useAppStore.getState();
+        console.log("this is message received on the channel", message)
 
         if(selectedChatType !==undefined && selectedChatData._id=== message.channelId){
-            addMessages(message)
+            addChannelMessages(message)
         }
       }
 
