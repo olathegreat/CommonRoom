@@ -148,7 +148,7 @@ const Profile = () => {
                 {console.log(image)}
                 {image ? (
                   <AvatarImage
-                    src={image}
+                    src={`${HOST}/${image}`}
                     alt="profile"
                     className="object-cover w-full h-full bg-black"
                   />
