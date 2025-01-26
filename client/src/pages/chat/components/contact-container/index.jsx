@@ -12,7 +12,12 @@ const ContactContainer = () => {
     useAppStore();
 
   useEffect(() => {
+    
+
+   
     const getContact = async () => {
+      try{
+   
       const response = await apiClient.get(GET_DM_ROUTES, {
         withCredentials: true,
       });
@@ -21,6 +26,10 @@ const ContactContainer = () => {
       if (response.data.contacts) {
         setDirectMessagesContacts(response.data.contacts);
       }
+
+    }catch(err){
+      console.log(err);
+    }
     };
     const getChannels = async () => {
         const response = await apiClient.get(GET_USER_CHANNELS_ROUTE, {
@@ -36,8 +45,8 @@ const ContactContainer = () => {
     getContact();
   }, []);
   return (
-    <div className="relative  md:w-[35vw] lg:w-[30vw] xl:w-[20vw] bg-[#1b1c24] border-r-2 border-[#2f303b] w-full">
-      <h1>
+    <div className="relative   md:w-[35vw] lg:w-[30vw] xl:w-[20vw] bg-[#1b1c24] border-r-2 border-[#2f303b] w-full">
+      <h1 className="text-3xl p-5 font-bold">
         Common<span className="text-purple-500">Room</span>
       </h1>
 
@@ -68,7 +77,7 @@ const ContactContainer = () => {
 
 const Title = ({ text }) => {
   return (
-    <h6 className="uppercase tracking-widest text-neutral-400 pl-10 font-light text-opacity-90 text-sm">
+    <h6 className="uppercase tracking-widest text-neutral-400 pl-5 font-light text-opacity-90 text-sm">
       {" "}
       {text}
     </h6>

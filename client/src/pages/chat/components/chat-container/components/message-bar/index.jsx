@@ -1,3 +1,4 @@
+import { Input } from "@/components/ui/input";
 import { useSocket } from "@/context/SocketContext";
 import { apiClient } from "@/lib/api-client";
 import { useAppStore } from "@/store";
@@ -119,18 +120,21 @@ const MessageBar = () => {
   };
 
   return (
-    <div className="h-[10vh] bg-[#1c1d25] flex justify-center items-center px-8 mb-6 gap-6">
-      <div className="flex-1 flex  bg-[#2a2b33] rounded-md items-center gap-5 pr-5">
-        <input
+    <div className="h-[10vh]  bg-[#1c1d25] flex w-full  justify-center items-center px-2 sm:px-8 mb-6 gap-2 sm:gap-6">
+      <div className=" flex  bg-[#2a2b33] rounded-md items-center gap-2 flex-grow sm:gap-5 pr-2 sm:pr-5">
+        <Input
           type="text"
-          className="flex-1 p-5 bg-transparent rounded-md focus:border-none focus:outline-none"
+          className="flex-1 p-5 sm:h-auto bg-transparent rounded-md focus:border-none focus:outline-none"
           placeholder="Enter Message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
 
         <button className="text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all">
-          <GrAttachment className="text-2xl" onClick={handleAttachmentClick} />
+          <GrAttachment
+            className=" xs:text-2xl"
+            onClick={handleAttachmentClick}
+          />
         </button>
         <input
           type="file"
@@ -157,10 +161,10 @@ const MessageBar = () => {
         </div>
       </div>
       <button
-        className="bg-[#8417ff]  flex items-center justify-center p-5 rounded-md hover:bg-[#741bda] focus:bg-[#741bda] focus:border-none focus:outline-none focus:text-white duration-300 transition-all"
+        className="bg-[#8417ff]  flex items-center justify-center p-3 sm:p-5 rounded-md hover:bg-[#741bda] focus:bg-[#741bda] focus:border-none focus:outline-none focus:text-white duration-300 transition-all"
         onClick={handleSendMessage}
       >
-        <IoSend className="text-2xl" />
+        <IoSend className="text-xl sm:text-2xl" />
       </button>
     </div>
   );

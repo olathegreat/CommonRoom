@@ -1,6 +1,7 @@
 import { useAppStore } from "@/store";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { getColor } from "@/lib/utils";
+import { HOST } from "@/utils/constant";
 
 const ContactList = ({ contacts, isChannel = false }) => {
   const {
@@ -29,7 +30,7 @@ const ContactList = ({ contacts, isChannel = false }) => {
       {contacts.map((contact) => (
         <div
           key={contact._id}
-          className={`pl-10 py-2 transition-all duration-300 cursor-pointer ${
+          className={`pl-5 py-2 transition-all duration-300 cursor-pointer ${
             selectedChatData && selectedChatData._id === contact._id
               ? "bg-[#8417ff] hover:bg-[#8417ff]"
               : "hover:bg-[#f1f1f1]"
@@ -37,12 +38,12 @@ const ContactList = ({ contacts, isChannel = false }) => {
           onClick={() => handleClick(contact)}
         >
             {console.log(contact)}
-          <div className="flex gap-5 items-center justify-start text-neutral-300">
+          <div className="flex gap-3 items-center justify-start text-neutral-300">
             {!isChannel && (
               <Avatar className="w-10 h-10 rounded-full overflow-hidden">
                 {contact.image ? (
                   <AvatarImage
-                    src={contact.image}
+                    src={`${HOST}/${contact.image}`}
                     alt="profile"
                     className="object-cover w-full h-full bg-black"
                   />

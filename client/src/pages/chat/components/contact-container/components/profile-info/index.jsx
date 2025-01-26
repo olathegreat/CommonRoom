@@ -36,15 +36,15 @@ const ProfileInfo = () => {
     }
   };
   return (
-    <div className="absolute bottom-0 h-15 flex items-center justify-between  px-10 w-full bg-[#282b33]">
-      <div className="flex gap-3 items-center justify-center">
+    <div className="absolute bottom-0 h-15 flex items-center gap-3 justify-between px-3   w-full bg-[#282b33]">
+      <div className="flex    items-center pt-2 ">
         <div className="w-12 h-12 relative">
-          <Avatar className="w-12 h-12  rounded-full overflow-hidden">
-            {console.log(userInfo.image)}
+          <Avatar className="w-10 h-10  rounded-full overflow-hidden">
+            
 
             {userInfo.image ? (
               <AvatarImage
-                src={userInfo.image}
+                src={`${HOST}/${userInfo.image}`}
                 alt="pro file"
                 className="object-cover w-full h-full bg-black"
               />

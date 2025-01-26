@@ -1,12 +1,13 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { getColor } from "@/lib/utils";
 import { useAppStore } from "@/store";
+import { HOST } from "@/utils/constant";
 import { RiCloseFill } from "react-icons/ri";
 
 const ChatHeader = () => {
   const { closeChat, selectedChatData , selectedChatType} = useAppStore();
   return (
-    <div className="h-[10vh] border-b-2 border-[#2f303b] flex items-center justify-between px-20">
+    <div className="h-[10vh] border-b-2 border-[#2f303b] flex items-center justify-between px-5 sm:px-10">
       <div className="flex gap-5 items-center w-full justify-between">
         <div className="flex gap-3 items-center justify-center">
           <div className="w-12 h-12 relative">
@@ -16,13 +17,13 @@ const ChatHeader = () => {
             <Avatar className="w-12 h-12 rounded-full overflow-hidden">
               {selectedChatData.image ? (
                 <AvatarImage
-                  src={selectedChatData.image}
+                  src={`${HOST}/${selectedChatData.image}`}
                   alt="profile"
                   className="object-cover w-full h-full bg-black"
                 />
               ) : (
                 <div
-                  className={`uppercase h-12 w-12 md:w-48 md:h-48 text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
+                  className={`uppercase h-12 w-12  text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
                     selectedChatData.color
                   )}`}
                 >

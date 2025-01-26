@@ -2,8 +2,12 @@
 module.exports = {
     darkMode: ["class"],
     content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
+	
   theme: {
   	extend: {
+		screens: {
+			xs: '480px', // Define your custom breakpoint
+		  },
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
