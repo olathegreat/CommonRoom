@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import pkg from "bcryptjs";
 import { request } from "express";
 import { renameSync, unlinkSync } from "fs";
+import path from "path";
 
 
 const { compare } = pkg;
@@ -155,7 +156,9 @@ export const addProfileImage = async (req, res, next) => {
     }
 
     const date = Date.now();
-    let fileName = "uploads/profile/" + date;
+    const ext = path.extname(req.file.originalname);
+    let fileName = "uploads/profile/" + date + ext;
+    console.log(fileName)
     console.log("File path:", req.file.path);
 console.log("New file path:", fileName);
 
