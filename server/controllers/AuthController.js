@@ -4,6 +4,7 @@ import pkg from "bcryptjs";
 import { request } from "express";
 import { renameSync, unlinkSync } from "fs";
 
+
 const { compare } = pkg;
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
@@ -33,14 +34,15 @@ export const signup = async (req, res, next) => {
       user: {
         id: user._id,
         email: user.email,
-        // firstname: user.firstname,
-        // lastname: user.lastname,
-        // image: user.image,
+       
         profileSetup: user.profileSetup,
       },
     });
   } catch (err) {
     console.log({ err });
+    if(err.errorResponse.code === 11000){
+      return res.status(400).send("Email already exists");
+    }
     return res.status(500).send("internal server error");
   }
 };
@@ -153,7 +155,7 @@ export const addProfileImage = async (req, res, next) => {
     }
 
     const date = Date.now();
-    let fileName = "uploads/profile/" + date + req.file.originalname;
+    let fileName = "uploads/profile/" + date;
     console.log("File path:", req.file.path);
 console.log("New file path:", fileName);
 

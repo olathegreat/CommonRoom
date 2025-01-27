@@ -27,10 +27,12 @@ export const SocketProvider = ({ children }) => {
       });
 
       const handleReceiveMessage = (message) => {
-        
-    
-        const { selectedChatData, selectedChatType, addMessages,addContactsInDMContacts } =
-          useAppStore.getState();
+        const {
+          selectedChatData,
+          selectedChatType,
+          addMessages,
+          addContactsInDMContacts,
+        } = useAppStore.getState();
 
         if (
           (selectedChatType !== undefined &&
@@ -42,25 +44,29 @@ export const SocketProvider = ({ children }) => {
           addMessages(message);
         }
         addContactsInDMContacts(message);
-
       };
 
-      const handleReceiveChannelMessage = (message) =>{
-        const {selectedChatData, selectedChatType, addChannelMessages, addChannelInChannelList} = useAppStore.getState();
-        console.log("this is message received on the channel", message)
+      const handleReceiveChannelMessage = (message) => {
+        const {
+          selectedChatData,
+          selectedChatType,
+          addChannelMessages,
+          addChannelInChannelList,
+        } = useAppStore.getState();
+        console.log("this is message received on the channel", message);
 
-        if(selectedChatType !==undefined && selectedChatData._id=== message.channelId){
-            addChannelMessages(message)
+        if (
+          selectedChatType !== undefined &&
+          selectedChatData._id === message.channelId
+        ) {
+          addChannelMessages(message);
         }
         addChannelInChannelList(message);
-     
-      }
+      };
 
       socket.current.on("receive-message", handleReceiveMessage);
       socket.current.on("sent-message", handleReceiveMessage);
-      socket.current.on("receive-channel-message",handleReceiveChannelMessage)
-
-      
+      socket.current.on("receive-channel-message", handleReceiveChannelMessage);
 
       return () => {
         socket.current.disconnect();
@@ -72,7 +78,5 @@ export const SocketProvider = ({ children }) => {
     <SocketContext.Provider value={socket.current}>
       {children}
     </SocketContext.Provider>
-
-
   );
 };

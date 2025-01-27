@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import Lottie from "react-lottie";
 import { animationDefaultOptions, getColor } from "@/lib/utils";
 import { apiClient } from "@/lib/api-client";
-import { SEARCH_CONTACT_ROUTES } from "@/utils/constant";
+import { HOST, SEARCH_CONTACT_ROUTES } from "@/utils/constant";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useAppStore } from "@/store";
