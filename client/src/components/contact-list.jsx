@@ -38,6 +38,9 @@ const ContactList = ({ contacts, isChannel = false }) => {
           onClick={() => handleClick(contact)}
         >
           {console.log(contact)}
+          {console.log(HOST + "/" + contact.image)}
+
+
           <div className="flex gap-3 items-center justify-start text-neutral-300">
             {!isChannel && (
               <Avatar className="w-10 h-10 rounded-full overflow-hidden">
