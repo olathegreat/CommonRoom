@@ -156,7 +156,7 @@ const MessageContainer = () => {
                     }}
                   >
                     <img
-                      src={`${HOST}/${message.fileUrl}`}
+                      src={message.fileUrl}
                       height={300}
                       width={300}
                       alt=""
@@ -173,7 +173,7 @@ const MessageContainer = () => {
                       className=" bg-black/20 p-3 text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300"
                       onClick={() => downloadFile(message.fileUrl)}
                     >
-                      <IoMdArrowRoundDown />
+                      <IoMdArrowRoundDown /> 
                     </span>
                   </div>
                 )}
