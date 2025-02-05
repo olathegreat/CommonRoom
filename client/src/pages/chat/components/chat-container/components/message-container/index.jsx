@@ -1,6 +1,10 @@
 import { apiClient } from "@/lib/api-client";
 import { useAppStore } from "@/store";
-import { GET_ALL_MESSAGES_ROUTE, GET_CHANNEL_MESSAGES, HOST } from "@/utils/constant";
+import {
+  GET_ALL_MESSAGES_ROUTE,
+  GET_CHANNEL_MESSAGES,
+  HOST,
+} from "@/utils/constant";
 import moment from "moment";
 import { MdFolderZip } from "react-icons/md";
 import { IoMdArrowRoundDown, IoMdClose } from "react-icons/io";
@@ -45,30 +49,30 @@ const MessageContainer = () => {
     };
 
     const getChannelMessages = async () => {
-        try {
-          console.log(selectedChatData._id);
-  
-          const response = await apiClient.get(
-            `${GET_CHANNEL_MESSAGES}/${selectedChatData._id}` ,
-        
-            {
-              withCredentials: true,
-            }
-          );
-          console.log(response);
-  
-          if (response.data.messages) {
-            setSelectedChatMessages(response.data.messages);
+      try {
+        console.log(selectedChatData._id);
+
+        const response = await apiClient.get(
+          `${GET_CHANNEL_MESSAGES}/${selectedChatData._id}`,
+
+          {
+            withCredentials: true,
           }
-        } catch (err) {
-          console.log(err);
+        );
+        console.log(response);
+
+        if (response.data.messages) {
+          setSelectedChatMessages(response.data.messages);
         }
-      };
+      } catch (err) {
+        console.log(err);
+      }
+    };
 
     if (selectedChatData._id) {
       if (selectedChatType === "contact") {
         getMessages();
-      } else if(selectedChatType === "channel"){
+      } else if (selectedChatType === "channel") {
         getChannelMessages();
       }
     }
@@ -89,32 +93,24 @@ const MessageContainer = () => {
     return ImageRegex.test(filePath);
   };
 
-  const downloadFile = async (file) => {
-    console.log(file);
-    setIsDownloading(true);
-    setFileDownloadProgress(0);
-    const response = await apiClient.get(`${HOST}/${file}`, {
-      responseType: "blob",
-      onDownloadProgress: (progressEvent) => {
-        const { loaded, total } = progressEvent;
-        const percentCompleted = Math.round((loaded * 100) / total);
-        setFileDownloadProgress(percentCompleted);
-      },
-    });
-
-    console.log(response);
-
-    const urlBlob = window.URL.createObjectURL(response.data);
+  const downloadFile = (fileUrl) => {
+    console.log("Downloading:", fileUrl);
+  
+    // Modify URL to force Cloudinary to download instead of open
+    const modifiedUrl = fileUrl.replace("/upload/", "/upload/fl_attachment/");
+  
+    // Create an <a> tag and trigger download
     const link = document.createElement("a");
-    link.href = urlBlob;
-    link.setAttribute("download", file.split("/").pop());
+    link.href = modifiedUrl;
+    link.setAttribute("download", ""); 
+  
     document.body.appendChild(link);
     link.click();
-    link.remove();
-    window.URL.revokeObjectURL(urlBlob);
-    setIsDownloading(false);
-    setFileDownloadProgress(0);
+    document.body.removeChild(link);
   };
+  
+  
+  
 
   const renderMessages = () => {
     let lastDate = null;
@@ -173,7 +169,7 @@ const MessageContainer = () => {
                       className=" bg-black/20 p-3 text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300"
                       onClick={() => downloadFile(message.fileUrl)}
                     >
-                      <IoMdArrowRoundDown /> 
+                      <IoMdArrowRoundDown />
                     </span>
                   </div>
                 )}
@@ -189,11 +185,10 @@ const MessageContainer = () => {
     };
 
     const renderChannelMessage = (message) => {
-        {console.log("rederedChannel meessage",message)}
+      {
+        console.log("rederedChannel meessage", message);
+      }
       return (
-        
-
-        
         <div
           className={`mt-5 ${
             message.sender._id !== userInfo.id ? "text-left" : "text-right"
@@ -210,7 +205,7 @@ const MessageContainer = () => {
               {message.content}
             </div>
           )}
-           {message.messageType === "file" && (
+          {message.messageType === "file" && (
             <div>
               <div
                 className={`${
@@ -267,7 +262,6 @@ const MessageContainer = () => {
                     message.sender.color
                   )}`}
                 >
-                  
                   {message.sender.firstname
                     ? message.sender.firstname?.split("").shift()
                     : message.sender.email?.split("").shift()}
@@ -285,8 +279,6 @@ const MessageContainer = () => {
             <div>{moment(message.timestamp).format("LT")}</div>
           )}
         </div>
-
-
       );
     };
 
@@ -319,10 +311,7 @@ const MessageContainer = () => {
       {showImage && (
         <div className="fixed z-[1000] top-0 left-0 h-[100vh] w-[100vw] flex items-center justify-center backdrop-blur-lg flex-col">
           <div>
-            <img
-              src={`${HOST}/${imageUrl}`}
-              className="h-[80vh] w-full bg-cover"
-            />
+            <img src={imageUrl} className="h-[80vh] w-full bg-cover" />
           </div>
 
           <div className="flex gap-5 fixed top-0 mt-5">
