@@ -5,7 +5,13 @@ import multer from "multer";
 
 
 const authRoutes = Router();
-const upload = multer({ dest: "uploads/profile" });
+// const upload = multer({ dest: "uploads/profile" });
+
+const storage = multer.memoryStorage(); 
+
+const upload = multer({ storage, limits:{
+    fileSize: 5 * 1024 * 1024 
+} }); 
 
 authRoutes.post("/signup", signup)
 authRoutes.post("/login", login)

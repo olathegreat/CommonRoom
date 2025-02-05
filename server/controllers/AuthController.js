@@ -2,6 +2,7 @@ import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
 import pkg from "bcryptjs";
 import { request } from "express";
+import cloudinary from "cloudinary";
 import { renameSync, unlinkSync } from "fs";
 import path from "path";
 
@@ -148,6 +149,20 @@ export const updateProfile = async (req, res, next) => {
   }
 };
 
+const uploadImage = async (file) => {
+  const image = file
+  const base64Image = Buffer.from(image.buffer).toString("base64");
+  const dataURI = `data:${image.mimetype};base64,${base64Image}`;
+  const uploadResponse = await cloudinary.v2.uploader.upload(dataURI, {
+      quality: "auto",
+      fetch_format: "auto",
+      timeout:180000
+  });
+
+  return uploadResponse.url;
+
+}
+
 export const addProfileImage = async (req, res, next) => {
 
   try {
@@ -155,14 +170,17 @@ export const addProfileImage = async (req, res, next) => {
       return res.status(400).send("image is required");
     }
 
-    const date = Date.now();
-    const ext = path.extname(req.file.originalname);
-    let fileName = "uploads/profile/" + date + ext;
-    console.log(fileName)
-    console.log("File path:", req.file.path);
-console.log("New file path:", fileName);
+    const fileName = await uploadImage(req.file);
+           
 
-    renameSync(req.file.path, fileName);
+//     const date = Date.now();
+//     const ext = path.extname(req.file.originalname);
+//     let fileName = "uploads/profile/" + date + ext;
+//     console.log(fileName)
+//     console.log("File path:", req.file.path);
+// console.log("New file path:", fileName);
+
+//     renameSync(req.file.path, fileName);
 
     const updatedUser = await User.findByIdAndUpdate(
       req.userId,
@@ -191,9 +209,10 @@ export const removeProfileImage = async (req, res, next) => {
         return res.status(404).send("user not found");
     }
     if(user.image){
-        unlinkSync(user.image);
+      user.image = null;
+        
     }
-    user.image = null;
+    
     await user.save();
 
     return res.status(200).send('profile image removed successfully');

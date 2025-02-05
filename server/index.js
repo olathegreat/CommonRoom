@@ -8,6 +8,7 @@ import contactRoutes from "./routes/ContactRoutes.js";
 import setupSocket from "./socket.js";
 import messagesRoutes from "./routes/MessagesRoute.js";
 import channelRoutes from "./routes/ChannelRoutes.js";
+import {v2 as cloudinary} from "cloudinary"
 
 dotenv.config();
 
@@ -15,6 +16,13 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 const databaseurl = process.env.DATABASE_URL;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,   
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
+
 
 app.use(cors({
     origin: [process.env.ORIGIN],
